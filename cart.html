@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - T-Shirt Store</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Full height */
+        }
+
+        header {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #1abc9c;
+        }
+
+        main {
+            flex: 1; /* Allow main section to grow */
+            display: flex;
+            justify-content: center; /* Center content */
+            align-items: flex-start; /* Align items to the top */
+            padding: 20px;
+            background: linear-gradient(rgba(44, 62, 80, 0.7), rgba(44, 62, 80, 0.7)), url('https://via.placeholder.com/1200x800') no-repeat center center/cover;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .cart {
+            background: rgba(255, 255, 255, 0.9); /* White background with transparency */
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+
+        .cart h2 {
+            font-size: 2.5em;
+            margin: 0 0 20px;
+            color: #2c3e50;
+        }
+
+        .cart-item {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            text-align: left;
+        }
+
+        .cart-item h3 {
+            margin: 0;
+        }
+
+        .cart-item p {
+            margin: 5px 0;
+        }
+
+        .cancel-item {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+            border-radius: 5px;
+        }
+
+        .cancel-item:hover {
+            background: #c0392b;
+        }
+
+        .shop-now {
+            background: #1abc9c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+        .shop-now:hover {
+            background: #16a085;
+        }
+
+        .totals {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #2c3e50;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .cart {
+                padding: 20px; /* Reduced padding for mobile */
+            }
+
+            .cart h2 {
+                font-size: 2em; /* Smaller font size for mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Your Cart</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="cart.html">Cart</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="cart">
+            <h2>Items in Your Cart</h2>
+            <div id="cartItems"></div>
+            <p id="emptyMessage">No items in cart.</p>
+            <div class="totals" id="totals"></div>
+            <button class="shop-now" onclick="shopNow()">Shop Now</button>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 T-Shirt Store. All rights reserved.</p>
+    </footer>
+    <script>
+        // Function to display cart items
+        function displayCartItems() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            const emptyMessage = document.getElementById('emptyMessage');
+            const totalsContainer = document.getElementById('totals');
+            const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+            // Clear previous items
+            cartItemsContainer.innerHTML = '';
+            totalsContainer.innerHTML = ''; // Clear previous totals
+
+            if (cartItems.length === 0) {
+                emptyMessage.style.display = 'block'; // Show empty message
+                totalsContainer.style.display = 'none'; } else {
+                emptyMessage.style.display = 'none'; // Hide empty message
+                let totalAmount = 0;
+                let totalCount = 0;
+
+                cartItems.forEach((item, index) => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'cart-item';
+                    itemDiv.innerHTML = `
+                        <h3>${item.name}</h3>
+                        <p>Price: $${item.price}</p>
+                        <p>Quantity: ${item.quantity}</p>
+                        <button class="cancel-item" onclick="cancelItem(${index})">Cancel</button>
+                    `;
+                    cartItemsContainer.appendChild(itemDiv);
+
+                    // Calculate totals
+                    totalAmount += item.price * item.quantity;
+                    totalCount += item.quantity;
+                });
+
+                // Display totals
+                totalsContainer.innerHTML = `Total Items: ${totalCount} | Total Amount: $${totalAmount.toFixed(2)}`;
+                totalsContainer.style.display = 'block'; // Show totals
+            }
+        }
+
+        // Function to handle the "Cancel" button click
+        function cancelItem(index) {
+            const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            cartItems.splice(index, 1); // Remove the item at the specified index
+            localStorage.setItem('cartItems', JSON.stringify(cartItems)); // Update local storage
+            displayCartItems(); // Refresh the cart display
+        }
+
+        // Function to handle the "Shop Now" button click
+        function shopNow() {
+            const email = prompt("Please enter your email:");
+            const address = prompt("Please enter your house address:");
+            const phone = prompt("Please enter your phone number:");
+
+            if (email && address && phone) {
+                // Send data to Google Sheets
+                fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', { // Replace with your Google Apps Script URL
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, address, phone }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.result === "Success") {
+                        alert(`Thank you for your order!\nEmail: ${email}\nAddress: ${address}\nPhone: ${phone}`);
+                        // Clear the cart after the order is placed
+                        localStorage.removeItem('cartItems');
+                        displayCartItems(); // Refresh the cart display
+                    } else {
+                        alert("There was an error processing your order.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("There was an error processing your order.");
+                });
+            } else {
+                alert("All fields are required!");
+            }
+        }
+
+        // Call the function to display items when the page loads
+        window.onload = displayCartItems;
+    </script>
+</body>
+</html>

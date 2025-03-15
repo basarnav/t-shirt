@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - T-Shirt Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Full height */
+        }
+
+        header {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #1abc9c;
+        }
+
+        .cart-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #ecf0f1;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .cart-icon:hover {
+            color: #1abc9c;
+        }
+
+        .search-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .search-container input {
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .search-container button {
+            padding: 10px 15px;
+            background: #1abc9c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .search-container button:hover {
+            background: #16a085;
+        }
+
+        main {
+            flex: 1; /* Allow main section to grow */
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Center products */
+            align-items: flex-start; /* Align items to the top */
+        }
+
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .product {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .product:hover {
+            transform: scale(1.05);
+        }
+
+        .product img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .product h3 {
+            margin: 10px 0;
+        }
+
+        .product p {
+            margin: 0 0 10px;
+        }
+
+        .product button {
+            background: #1abc9c;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin: 5px 0; /* Add margin for spacing */
+        }
+
+        .product button:hover {
+            background: #16a085;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        /* Animation for item added to cart */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #1abc9c;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateY(-20px);
+            z-index: 2000;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive Styles */
+        @media (max-width : 768px) {
+            .product {
+                padding: 10px; /* Reduced padding for mobile */
+            }
+
+            .product h3 {
+                font-size: 1.2em; /* Smaller font size for mobile */
+            }
+
+            .product p {
+                font-size: 1em; /* Smaller font size for mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Our Products</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <i class="fas fa-shopping-cart cart-icon" id="cartIcon" onclick="openCart()"></i>
+    </header>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for products...">
+        <button onclick="searchProducts()">Search</button>
+    </div>
+
+    <main>
+        <section class="product-list">
+            <div class="product">
+                <img src="shirt.jpg" alt="T-Shirt">
+                <h3>T-Shirt</h3>
+                <p>$19.99</p>
+                <button onclick="addToCart('T-Shirt', 19.99)">Add to Cart</button>
+                <button onclick="buyNow('T-Shirt', 19.99)">Buy Now</button>
+            </div>
+            <div class="product">
+                <img src="hoodie.webp" alt="Hoodie">
+                <h3>Hoodie</h3>
+                <p>$39.99</p>
+                <button onclick="addToCart('Hoodie', 39.99)">Add to Cart</button>
+                <button onclick="buyNow('Hoodie', 39.99)">Buy Now</button>
+            </div>
+            <div class="product">
+                <img src="cap.avif" alt="Cap">
+                <h3>Cap</h3>
+                <p>$15.99</p>
+                <button onclick="addToCart('Cap', 15.99)">Add to Cart</button>
+                <button onclick="buyNow('Cap', 15.99)">Buy Now</button>
+            </div>
+            <div class="product">
+                <img src="shoe.jpg" alt="Shoes">
+                <h3>Shoes</h3>
+                <p>$49.99</p>
+                <button onclick="addToCart('Shoes', 49.99)">Add to Cart</button>
+                <button onclick="buyNow('Shoes', 49.99)">Buy Now</button>
+            </div>
+            <div class="product">
+                <img src="images.jpg" alt="Graphic T-Shirt">
+                <h3>Graphic T-Shirt</h3>
+                <p>$24.99</p>
+                <button onclick="addToCart('Graphic T-Shirt', 24.99)">Add to Cart</button>
+                <button onclick="buyNow('Graphic T-Shirt', 24.99)">Buy Now</button>
+            </div>
+            <div class="product">
+                <img src="m.jpg" alt="Long Sleeve T-Shirt">
+                <h3>Long Sleeve T-Shirt</h3>
+                <p>$29.99</p>
+                <button onclick="addToCart('Long Sleeve T-Shirt', 29.99)">Add to Cart</button>
+                <button onclick="buyNow('Long Sleeve T-Shirt', 29.99)">Buy Now</button>
+            </div>
+            <div class="product">
+                <img src="h.jpg" alt="Baseball Cap">
+                <h3>Baseball Cap</h3>
+                <p>$18.99</p>
+                <button onclick="addToCart('Baseball Cap', 18.99)">Add to Cart</button>
+                <button onclick="buyNow('Baseball Cap', 18.99)">Buy Now</button>
+            </div>
+            <div class="product">
+                <img src="k.jpg" alt="Sports Shoes">
+                <h3>Sports Shoes</h3>
+                <p>$59.99</p>
+                <button onclick="addToCart('Sports Shoes', 59.99)">Add to Cart</button>
+                <button onclick="buyNow('Sports Shoes', 59.99)">Buy Now</button>
+            </div>
+            <div class="product">
+                <img src="baniyan.avif" alt="Tank Top">
+ <h3>Tank Top</h3>
+                <p>$14.99</p>
+                <button onclick="addToCart('Tank Top', 14.99)">Add to Cart</button>
+                <button onclick="buyNow('Tank Top', 14.99)">Buy Now</button>
+            </div>
+            <div class="product">
+                <img src="wind.jpg" alt="Windbreaker">
+                <h3>Windbreaker</h3>
+                <p>$34.99</p>
+                <button onclick="addToCart('Windbreaker', 34.99)">Add to Cart</button>
+                <button onclick="buyNow('Windbreaker', 34.99)">Buy Now</button>
+            </div>
+            <div class="product">
+                <img src="beanie.jpg" alt="Beanie">
+                <h3>Beanie</h3>
+                <p>$12.99</p>
+                <button onclick="addToCart('Beanie', 12.99)">Add to Cart</button>
+                <button onclick="buyNow('Beanie', 12.99)">Buy Now</button>
+            </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/200x200?text=Flip+Flops" alt="Flip Flops">
+                <h3>Flip Flops</h3>
+                <p>$9.99</p>
+                <button onclick="addToCart('Flip Flops', 9.99)">Add to Cart</button>
+                <button onclick="buyNow('Flip Flops', 9.99)">Buy Now</button>
+            </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/200x200?text=Backpack" alt="Backpack">
+                <h3>Backpack</h3>
+                <p>$39.99</p>
+                <button onclick="addToCart('Backpack', 39.99)">Add to Cart</button>
+                <button onclick="buyNow('Backpack', 39.99)">Buy Now</button>
+            </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/200x200?text=Fanny+Pack" alt="Fanny Pack">
+                <h3>Fanny Pack</h3>
+                <p>$19.99</p>
+                <button onclick="addToCart('Fanny Pack', 19.99)">Add to Cart</button>
+                <button onclick="buyNow('Fanny Pack', 19.99)">Buy Now</button>
+            </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/200x200?text=Joggers" alt="Joggers">
+                <h3>Joggers</h3>
+                <p>$29.99</p>
+                <button onclick="addToCart('Joggers', 29.99)">Add to Cart</button>
+                <button onclick="buyNow('Joggers', 29.99)">Buy Now</button>
+            </div>
+            <div class="product">
+                <img src="https://via.placeholder.com/200x200?text=Denim+Jacket" alt="Denim Jacket">
+                <h3>Denim Jacket</h3>
+                <p>$49.99</p>
+                <button onclick="addToCart('Denim Jacket', 49.99)">Add to Cart</button>
+                <button onclick="buyNow('Denim Jacket', 49.99)">Buy Now</button>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 T-Shirt Store. All rights reserved.</p>
+    </footer>
+    <div class="notification" id="notification"></div>
+    <script>
+        function addToCart(name, price) {
+            const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            const existingItem = cartItems.find(item => item.name === name);
+
+            if (existingItem) {
+                existingItem.quantity += 1; // Increase quantity if item already exists
+            } else {
+                cartItems.push({ name, price, quantity: 1 }); // Add new item
+            }
+
+            localStorage.setItem('cartItems', JSON.stringify(cartItems)); // Save to local storage
+            showNotification(`${name} added to cart!`); // Show notification
+            animateCartIcon(); // Animate cart icon
+        }
+
+        function buyNow(name, price) {
+            addToCart(name, price); // Add item to cart
+            window.location.href = 'cart.html'; // Redirect to cart page
+        }
+
+        function searchProducts() {
+            const query = document.getElementById('search').value.toLowerCaseconst, products = document.querySelectorAll('.product');
+            products.forEach(product => {
+                const productName = product.querySelector('h3').innerText.toLowerCase();
+                product.style.display = productName.includes(query) ? 'block' : 'none';
+            });
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.innerText = message;
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000); // Notification will disappear after 3 seconds
+        }
+
+        function animateCartIcon() {
+            const cartIcon = document.getElementById('cartIcon');
+            cartIcon.classList.add('animate');
+
+            setTimeout(() => {
+                cartIcon.classList.remove('animate');
+            }, 500); // Animation duration
+        }
+        function openCart() {
+    window.location.href = 'cart.html'; // Redirect to cart page
+}
+    </script>
+    <style>
+        .cart-icon.animate {
+            transform: scale(1.2);
+            transition: transform 0.2s ease;
+        }
+    </style>
+</body>
+</html>
